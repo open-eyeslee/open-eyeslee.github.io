@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>SGEANet 语音合成系统</title>
+    <title>SGEANet Demopage</title>
     <style>
         :root {
             --primary: #2c3e50;
@@ -79,16 +79,127 @@
             border-radius: 8px;
             padding: 15px;
         }
+.authors-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 40px;
+    max-width: 1200px;
+    margin: 2rem auto;
+}
 
-        audio {
-            width: 100%;
-            margin-top: 10px;
-        }
+/* 作者条目 */
+.author-card {
+    width: calc(33.333% - 40px);
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* 第二行特殊宽度 */
+.authors-grid > .author-card:nth-child(n+4) {
+    width: calc(50% - 40px);
+}
+
+.author-name {
+    font-size: 1.3em;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--primary);
+}
+
+.author-detail {
+    line-height: 1.8;
+    color: #555;
+}
+
+.corresponding::after {
+    content: "*";
+    color: #e74c3c;
+    margin-left: 2px;
+}
+
+/* 响应式处理 */
+@media (max-width: 992px) {
+    .author-card {
+        width: 50% !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .author-card {
+        width: 100% !important;
+    }
+}
+
     </style>
 </head>
 <body>
     <h1>SGEANet：Interpretable and Controllable Emotional Speech Synthesis via Emotion Basis Vectors</h1>
 
+        <div class="section-container authors-grid">
+    <!-- 第一行 3个 -->
+    <div class="author-card">
+        <div class="author-name">Fan Li</div>
+        <div class="author-detail">
+            School of Computer Science and Technology<br>
+            Xinjiang University<br>
+            Urumqi, China<br>
+            107552301313@stu.xju.edu.cn
+        </div>
+    </div>
+
+    <div class="author-card">
+        <div class="author-name">Qi Wang</div>
+        <div class="author-detail">
+            School of Information and<br>
+            Communications Engineering<br>
+            Xi'an Jiaotong University<br>
+            Xi'an, China<br>
+            qiwang@gmail.xjtu.edu.cn
+        </div>
+    </div>
+
+    <div class="author-card">
+        <div class="author-name">Xiangyan Yang</div>
+        <div class="author-detail">
+            School of Computer Science and Technology<br>
+            Xinjiang University<br>
+            Urumqi, China<br>
+            107552304186@stu.xju.edu.cn
+        </div>
+    </div>
+
+    <!-- 第二行 2个 -->
+    <div class="author-card">
+        <div class="author-name">Xi Chen</div>
+        <div class="author-detail">
+            School of Information and Communications Engineering<br>
+            Xi'an Jiaotong University<br>
+            Xi'an, China<br>
+            xichen@mail.xjtu.edu.cn
+        </div>
+    </div>
+
+    <div class="author-card">
+        <div class="author-name corresponding">Fan Li</div>
+        <div class="author-detail">
+            School of Computer Science and Technology<br>
+            Xinjiang University<br>
+            Urumqi, China<br>
+            School of Information and Communications Engineering<br>
+            Xi'an Jiaotong University<br>
+            Xi'an, China<br>
+            lifan@mail.xjtu.edu.cn
+        </div>
+    </div>
+</div>
+
+
+    <div class="section-container">
+        <h2>Abstract</h2>
+        <p>Emotional expression is crucial in Text-to-Speech systems as it enhances the naturalness, expressiveness, and empathy of synthesized speech. Despite advances in TTS technology, current systems face challenges in modeling emotional expression due to the limitations of discrete emotional categories and continuous dimensional models, which struggle to capture the complexity of over 34,000 human emotional states and the “one-to-many” mapping problem. To address these issues, we propose SGEANet, a framework that bridges the gap between discrete emotion categories and continuous emotion representations, enabling accurate and controllable emotional expression in speech synthesis. SGEANet uses emotion basis vectors to model emotional expressions, incorporating dynamic interactions between emotions. We introduce an emotion anchor regression learning strategy that uses emotion categories as supervision, ensuring better alignment and discriminability between emotion vectors and their corresponding acoustic patterns. Experimental results show that SGEANet outperforms existing methods in both subjective and objective evaluations, demonstrating its ability to precisely control emotional expression and synthesize rich, mixed emotions like “bittersweet” with high naturalness and expressiveness.</p>
+    </div>
     <script>
     // 自动生成配置（模拟文件系统扫描）
     const virtualFS = [
@@ -174,7 +285,7 @@
         "baseEmotion": "happy"
     },
     {
-        "path": "0018happy/Take courage all isn't lost yet",
+        "path": "0018happy/Take courage all isn't lost yet.",
         "files": [
             "0.wav",
             "1.wav",
@@ -227,12 +338,25 @@
     {
         "path": "happy_mixed_sad/I think it'll encourage me",
         "files": [
-            "0_4.wav",
+            "0.4.wav",
             "0.8.wav",
             "1.2.wav",
-            "1.6.wav",
+            "1.6.wav"
         ],
-        "type": "",
+        "type": "blending",
+        "emotions": ["happy", "sad"],  // 新增明确的情感对
+        "baseEmotion": "happy_mixed_sad"
+    },
+        {
+        "path": "sad_mixed_happy/I think it'll encourage me",
+        "files": [
+            "0.4.wav",
+            "0.8.wav",
+            "1.2.wav",
+            "1.6.wav"
+        ],
+        "type": "blending",
+        "emotions": ["sad","happy"],  // 新增明确的情感对
         "baseEmotion": "happy_mixed_sad"
     },
     ];
@@ -274,18 +398,19 @@
                     .map(folder => {
                         const [e1, e2] = folder.emotions.map(e => emotionMap[e] || e);
                         return {
-                            emotion: `${e1}与${e2}混合`,
+                            emotion: `Mixing ${e1} & ${e2}`,
                             script: folder.path.split('/')[1].replace(/_/g, ' '),
                             folder: folder.path,
-                            mixes: folder.files
-                                .filter(f => f.startsWith('blend'))
-                                .map(f => {
-                                    const ratios = f.match(/\d+/g);
-                                    return {
-                                        name: f,
-                                        ratio: `${e1} ${ratios[0]}% + ${e2} ${ratios[1]}%`
-                                    }
-                                }),
+                            mixes: folder.files.map(f => {
+                                // 解析文件名中的混合参数
+                                const param = parseFloat(f.replace('.wav', ''));
+                                const e1Percent = Math.min(1000, Math.max(0, Math.round(param * 100)));
+                                const e2Percent = 100;
+                                return {
+                                    name: f,
+                                    ratio: `${e1} ${e1Percent}% + ${e2} ${e2Percent}%`
+                                };
+                            }),
                             spectrogram: folder.files.find(f => f.startsWith('pitch'))
                         }
                     })
